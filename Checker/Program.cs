@@ -20,8 +20,9 @@ class Program
 
         // 명령어 목록 정의
         var commandNames = new HashSet<string> {
-            "IO_WRITE", "IO_READ", "PARAM_READ",
-            "PARAM_WRITE", "IO_READ_ANALOG", "IO_READ_ENUM"
+            "IO_READ", "IO_READ_DIGITAL", "IO_READ_ANALOG", "IO_WRITE",
+            "PARAM_READ_ENUM", "PARAM_READ_DIGITAL", "PARAM_READ_ANALOG", "PARAM_READ_STRING",
+            "PARAM_WRITE", "PARAM_WRITE_ENU", "PARAM_WRITE_DIGITAL", "PARAM_WRITE_ANALOG", "PARAM_WRITE_STRING",
         };
 
         var compilation = await project.GetCompilationAsync();
@@ -119,10 +120,10 @@ class Program
                 if (valueSyntax != null)
                 {
                     // 상수로 평가할 수 있는지 확인
-                    var constantValue = semanticModel.GetConstantValue(valueSyntax);
-                    if (constantValue.HasValue && constantValue.Value is string strValue)
+                    if (valueSyntax is LiteralExpressionSyntax literal)
                     {
-                        return strValue;
+                        string? constantValue = literal.Token.ValueText;
+                        return constantValue;
                     }
                     else
                     {
